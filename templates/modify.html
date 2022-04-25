@@ -1,0 +1,166 @@
+{% include 'header.html' %}
+<style>
+    input[name^="response"]:checked+span {
+        background-color: rgb(253 186 116);
+    }
+</style>
+
+<main class="max-w-5xl w-3/4 m-auto">
+
+    <h1
+        class="text-4xl relative p-1 before:w-72 before:h-9 before:block before:bg-orange-300 before:absolute before:l-0 before:-z-20">
+        Créer ton propre quiz !
+    </h1>
+    <p class="mb-10">
+        (Tu dois créer au moins une question)
+    </p>
+
+    <form action="" method="post" class="flex flex-col text-lg">
+
+        <label class="flex flex-col mb-5">
+            <span class="after:content-['*'] after:text-red-600 after:ml-2">Le titre</span>
+            <input id="title" type="text" name="title" class="p-1 border-black border-2" maxlength="100" required
+                value="{{quiz_info['title']}}">
+        </label>
+
+        <label class="flex flex-col mb-5">
+            <span class="after:content-['*'] after:text-red-600 after:ml-2">La description</span>
+            <textarea id="description" name="description" class="p-1 border-black border-2 resize-y" maxlength="250"
+                required>{{quiz_info['description']}}</textarea>
+        </label>
+
+        <label class="flex flex-col mb-5">
+            <span>Le tag <span class="text-gray-400">(permet de grouper les quiz par catégorie)</span></span>
+            <input id="tag" type="text" name="tag" class="p-1 border-black border-2" placeholder="Ex: Développement"
+                maxlength="50" value="{{quiz_info['tags']}}">
+        </label>
+
+        {% for question in quiz_questions %}
+        <fieldset
+            class="mb-10 pl-10 relative before:h-36 before:w-0.5 before:bg-orange-600 before:absolute before:left-0">
+            <label class="flex flex-col mb-5">
+                <span class="after:content-['*'] after:text-red-600 after:ml-2">La question</span>
+                <textarea name="question-0" class="p-1 border-black border-2 resize-y w-full min-h-[70px] max-h-[200px]"
+                    maxlength="250" required>{{question['content']}}</textarea>
+            </label>
+
+            <div class="flex justify-center">
+                <label class="mr-10">
+                    {% if question['response'] == 'true' %}
+                    <input type="radio" name="response-{{question['question_id']}}" value="true" class="hidden" checked required>
+                    {% else %}
+                    <input type="radio" name="response-{{question['question_id']}}" value="true" class="hidden" required>
+                    {% endif %}
+                    <span
+                        class="p-2 w-max m-auto text-xl border-2 border-black rounded-xl duration-100 cursor-pointer">Vrai</span>
+                </label>
+                <label>
+                    {% if question['response'] == 'false' %}
+                    <input type="radio" name="response-{{question['question_id']}}" value="false" class="hidden" checked required>
+                    {% else %}
+                    <input type="radio" name="response-{{question['question_id']}}" value="false" class="hidden" required>
+                    {% endif %}
+
+                    <span
+                        class="p-2 w-max m-auto text-xl border-2 border-black rounded-xl duration-100 cursor-pointer">Faux</span>
+                </label>
+            </div>
+        </fieldset>
+        {% endfor %}
+
+
+        <button type="button" class="text-3xl border-2 border-black w-max p-3 add-button" title="Ajouter une question">
+            +
+        </button>
+
+        <button type="submit"
+            class="p-2 bg-orange-300 w-max m-auto text-xl border-2 border-transparent rounded-xl hover:bg-transparent hover:border-orange-300 duration-100">
+            Enregistrer les modifications
+        </button>
+
+    </form>
+
+
+</main>
+
+<script>
+    addEventListener('DOMContentLoaded', () => {
+
+        // Ajout de nouvelles questions
+        let questionId = {{quiz_questions[-1]['question_id'] + 1}};
+        document.querySelector('.add-button').addEventListener('click', (e) => {
+            const newQuestion = document.createElement('fieldset');
+            newQuestion.setAttribute('class', 'mb-10 pl-10 relative before:h-36 before:w-0.5 before:bg-orange-600 before:absolute before:left-0');
+            newQuestion.innerHTML = `
+                <label class="flex flex-col mb-5">
+                    <span>La question</span>
+                    <textarea name="question-${questionId}" class="p-1 border-black border-2 resize-y w-full min-h-[70px] max-h-[200px]" maxlength="250" required></textarea>
+                </label> 
+            
+                <div class="flex justify-center">
+                    <label class="mr-10">
+                        <input type="radio" name="response-${questionId}" value="true" class="hidden" required>
+                        <span class="p-2 w-max m-auto text-xl border-2 border-black rounded-xl duration-100 cursor-pointer">Vrai</span>
+                    </label>
+                    <label class="">
+                        <input type="radio" name="response-${questionId}" value="false" class="hidden" required>
+                        <span class="p-2 w-max m-auto text-xl border-2 border-black rounded-xl duration-100 cursor-pointer">Faux</span>
+                    </label>
+                </div>
+                <button type="button" class="bg-red-300 p-2 rounded ml-auto block mt-4">
+                    Supprimer
+                </button>
+                `;
+
+            e.target.parentNode.insertBefore(newQuestion, e.target);
+            questionId++;
+
+            newQuestion.querySelector('button').addEventListener('click', (e) => {
+                e.target.parentNode.remove();
+            })
+        });
+
+        // Envoie des données
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let datas = {
+                title: form.querySelector('#title').value,
+                description: form.querySelector('#description').value,
+                tag: form.querySelector('#tag').value,
+                questions: []
+            };
+            document.querySelectorAll('form > fieldset').forEach(fieldset => {
+                datas.questions.push({
+                    content: fieldset.querySelector('textarea').value,
+                    response: fieldset.querySelector('input[type="radio"]:checked').value
+                })
+            })
+            fetch(form.action, {
+                method: "POST",
+                body: JSON.stringify(datas)
+            })
+                .then(res => res.json())
+                .then(json => {
+                    if (json.quiz_id != null) {
+                        window.location.pathname = "/quiz/" + json.quiz_id
+                    }
+                    else {
+                        if (json.error) {
+                            if (form.querySelector('p.error') == null) {
+                                const error = document.createElement('p');
+                                error.setAttribute('class', 'p-2 text-lg bg-red-300 w-max m-auto mb-5 error');
+                                error.textContent = json.error;
+                                form.insertBefore(error, form.firstChild);
+                            } else {
+                                form.querySelector('p.error').textContent = json.error;
+                            }
+                        }
+                    }
+                })
+        })
+    })
+</script>
+
+{% include 'footer.html' %}

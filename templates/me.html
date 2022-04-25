@@ -1,0 +1,55 @@
+{% include 'header.html' %}
+
+  <main class="max-w-5xl w-3/4 m-auto">
+    <h1 class="text-4xl relative p-1 before:w-72 before:h-9 before:block before:bg-orange-300 before:absolute before:l-0 before:-z-20">
+        Salut {{user['pseudo']}} !
+    </h1>
+    
+    <form action="" method="post" class="mt-10">
+    
+        {% if error %}
+        <p class="p-2 bg-red-300 w-max m-auto mb-5">{{error}}</p>
+        {% elif success%}
+        <p class="p-2 bg-green-300 w-max m-auto mb-5">{{success}}</p>
+        {% endif %}
+
+
+        <label class="flex flex-col mb-5">
+            <span>Changer de pseudo</span>
+            <input type="text" name="pseudo" class="p-1 border-black border-2" required value="{{user['pseudo']}}">
+        </label>
+    
+        <label class="flex flex-col mb-5">
+            <span>Changer d'adresse mail</span>
+            <input type="email" name="email" class="p-1 border-black border-2" required value="{{user['email']}}">
+        </label>
+
+        <button type="submit" class="text-lg p-1 bg-orange-300 w-max m-auto text-xl border-2 border-transparent rounded-xl hover:bg-transparent hover:border-orange-300 duration-100">
+            Enregistrer les modifications
+        </button>
+
+    </form>
+
+    <section class="mt-10">
+
+        <h2 class="text-3xl">Mes quiz</h2>
+
+        {% if user_quiz == [] %}
+            <p>Tu n'as pas encore créer de quiz, <a href="/create-quiz" class="text-orange-600 mt-10">lance toi en cliquant ici !</a></p>
+        {% else %}
+            {% for quiz in user_quiz%}
+            <div class="p-2 border-black border-2 relative mb-10">
+                <h2 class="text-xl">{{quiz['title']}}</h2>
+                <a href="/quiz/{{quiz['id']}}" class="font-bold text-lg absolute right-0 bottom-0 bg-orange-300 p-1 border-black border-2 translate-y-4 translate-x-4">Y aller</a>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+
+
+        
+    </section>
+
+  </main>
+
+{% include 'footer.html' %}

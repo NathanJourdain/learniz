@@ -1,0 +1,92 @@
+{% include 'header.html' %}
+<style>
+    input[name^="response"]:checked+span {
+        background-color: rgb(253 186 116);
+    }
+</style>
+<main class="max-w-5xl w-3/4 m-auto">
+
+    <h1
+        class="text-4xl relative p-1 before:w-72 before:h-9 before:block before:bg-orange-300 before:absolute before:l-0 before:-z-20">
+        {{quiz_info['title']}}
+    </h1>
+    <p class="mb-10">
+        {{quiz_info['description']}}
+    </p>
+
+    <form action="" method="post" class="flex flex-col text-lg">
+
+        {% for question in quiz_questions %}
+        <div
+            class="mb-10 pl-10 relative min-h-[150px] before:h-36 before:w-0.5 before:bg-orange-600 before:absolute before:left-0">
+            <p>{{question['content']}}</p>
+            <div class="flex justify-center mt-5">
+                <label class="mr-10">
+                    <input type="radio" name="response-{{question['question_id']}}" value="true" class="hidden" required>
+                    <span
+                        class="p-2 w-max m-auto text-xl border-2 border-black rounded-xl duration-100 cursor-pointer">Vrai</span>
+                </label>
+                <label class="">
+                    <input type="radio" name="response-{{question['question_id']}}" value="false" class="hidden" required>
+                    <span
+                        class="p-2 w-max m-auto text-xl border-2 border-black rounded-xl duration-100 cursor-pointer">Faux</span>
+                </label>
+            </div>
+        </div>
+        {% endfor %}
+
+
+
+        <button type="submit"
+            class="p-2 bg-orange-300 w-max m-auto text-xl border-2 border-transparent rounded-xl hover:bg-transparent hover:border-orange-300 duration-100 mt-10 disabled:opacity-70 disabled:cursor-not-allowed"
+            disabled>
+            Envoyer les réponses
+        </button>
+    </form>
+
+    {% if is_owner %}
+    <a href="/modify-quiz/{{quiz_id}}" class="flex flex-row items-center hover:text-orange-600 mt-10">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img"
+            class="iconify iconify--ic" width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+            <path fill="currentColor"
+                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z">
+            </path>
+        </svg>
+        <span class="h-max">Modifier le quiz</span>
+    </a>
+
+    <a href="/delete-quiz/{{quiz_id}}" class="flex flex-row items-center hover:text-orange-600 mt-10">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img"
+            class="iconify iconify--ion" width="32" height="32" preserveAspectRatio="xMidYMid meet"
+            viewBox="0 0 512 512">
+            <path
+                d="M128 405.429C128 428.846 147.198 448 170.667 448h170.667C364.802 448 384 428.846 384 405.429V160H128v245.429zM416 96h-80l-26.785-32H202.786L176 96H96v32h320V96z"
+                fill="currentColor"></path>
+        </svg>
+        <span class="h-max">Supprimer le quiz</span>
+    </a>
+    {% endif %}
+
+
+</main>
+
+
+<script>
+    const validatequiz = () => {
+        for (question of document.querySelectorAll('form > div')) {
+            if (question.querySelector('input[type="radio"]:checked') == null) {
+                document.querySelector('form button[type="submit"]').disabled = true;
+                return;
+            }
+        }
+        document.querySelector('form button[type="submit"]').disabled = false;
+    };
+
+    validatequiz();
+    document.querySelectorAll('form input[type="radio"]').forEach(input => input.addEventListener('change', () => validatequiz()))
+
+
+
+</script>
+
+{% include 'footer.html' %}

@@ -1,0 +1,41 @@
+{% include 'header.html' %}
+
+<main class="max-w-5xl w-3/4 m-auto">
+
+    <h1 class="text-4xl relative before:w-72 before:h-9 before:block before:bg-orange-300 before:absolute before:l-0 before:-z-20">
+        Tu souhaites apprendre tout en t'amusant ?
+    </h1>
+    <p class="text-xl my-10 pl-5 py-3 border-l-4 border-orange-600 border-solid">
+        Rejoins <em class="not-italic font-bold">learniz</em> gratuitement et simplement en créant ton compte !
+    </p>
+
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-96 mb-10">
+        <h2 class="text-3xl self-end">Une multitude de quiz gratuits t'attendent.</h2>
+        <p class="text-xl text-gray-600 lg:row-start-2 lg:row-end-3">
+            Trouve facilement les quiz qui t'intéressent grâce à système de recherche simple.
+            <br>
+            <a href="/quiz" class="text-orange-600 mt-5 inline-block transition-transform hover:translate-x-2">
+                <img src="/static/icons/arrow-icon.svg" alt="flêche vers la droite" class="inline-block w-max" role="link">
+                Voir la liste des quiz
+            </a>
+        </p>
+        <img src="" alt="" class="w-full h-[200px] bg-orange-400 lg:row-start-1 lg:row-end-3">
+    </section>
+
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-96 mb-10">
+        <h2 class="text-3xl self-end lg:col-start-2 lg:row-start-1">Créer tes propres quiz et partagent les à tes amis.</h2>
+        <p class="text-xl text-gray-600 lg:row-start-2 lg:col-start-2">
+            Tu peux créer tes propres quiz via une interface simple et intuitive.
+            <br>
+            <a href="/create-quiz" class="text-orange-600 mt-5 inline-block transition-transform hover:translate-x-2">
+                <img src="/static/icons/arrow-icon.svg" alt="flêche vers la droite" class="inline-block w-max" role="link">
+                Créer ton propre quiz
+            </a>
+        </p>
+        
+        <img src="" alt="" class="w-full h-[200px] bg-orange-400 lg:row-start-1 lg:row-end-3">
+    </section>
+
+</main>
+
+{% include 'footer.html' %}

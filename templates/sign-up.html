@@ -1,0 +1,37 @@
+{% include 'header.html' %}
+
+  <main>
+    <form action="" method="post" class="flex flex-col m-auto w-max text-lg">
+
+      {% if error %}
+      <p class="p-2 text-lg bg-red-300 w-max m-auto mb-5">{{error}}</p>
+      {% endif %}
+
+      <label class="flex flex-col mb-5">
+        <span>Pseudo</span>
+        <input type="text" name="pseudo" class="p-1 border-black border-2" required >
+      </label>
+
+      <label class="flex flex-col mb-5">
+        <span>Adresse mail</span>
+        <input type="email" name="email" class="p-1 border-black border-2" required >
+      </label>
+
+      <label class="flex flex-col mb-5">
+        <span>Mot de passe</span>
+        <input type="password" name="password" class="p-1 border-black border-2" required >
+      </label>
+
+      <label class="flex flex-col mb-10">
+        <span>Confirmation du mot de passe</span>
+        <input type="password" name="confirm_password" class="p-1 border-black border-2" required >
+      </label>
+
+      <button type="submit" class="p-2 bg-orange-300 w-max m-auto text-xl border-2 border-transparent rounded-xl hover:bg-transparent hover:border-orange-300 duration-100">
+        S'inscrire
+      </button>
+      <a href="/auth/login" class="text-center mt-5 text-orange-600">Tu as déjà un compte ? Connecte toi.</a>
+    </form>
+  </main>
+
+{% include 'footer.html' %}

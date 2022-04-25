@@ -1,0 +1,61 @@
+{% include 'header.html' %}
+
+  <main class="max-w-5xl w-3/4 m-auto">
+    <form action="" method="get" class="flex items-center justify-center mb-10">
+        <input type="search" name="tag" class="p-1 border-black border-2" placeholder="Chercher un tag" required>
+        <button type="submit" role="link" title="Rechercher">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ion" width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 512 512"><path fill="currentColor" d="M464 428L339.92 303.9a160.48 160.48 0 0 0 30.72-94.58C370.64 120.37 298.27 48 209.32 48S48 120.37 48 209.32s72.37 161.32 161.32 161.32a160.48 160.48 0 0 0 94.58-30.72L428 464ZM209.32 319.69a110.38 110.38 0 1 1 110.37-110.37a110.5 110.5 0 0 1-110.37 110.37Z"></path></svg>
+        </button>
+    </form>
+
+    <h1 class="text-4xl relative p-1 before:w-72 before:h-9 before:block before:bg-orange-300 before:absolute before:l-0 before:-z-20">
+        Trouve un quiz parmi la multitude qui sont proposés !
+    </h1>
+
+    <section class="mt-10">
+
+        {% if quiz_list == [] %}
+          {% if request.args.get('tag') == "" or request.args.get('tag') == None %}
+            <p class="text-center text-lg">Aucun quiz n'a été trouvé.</p>
+          {% else %}
+            <p class="text-center text-lg">Aucun quiz n'a été trouvé avec le tag <span class="font-bold text-orange-600">{{request.args.get('tag')}}</span> :(<br>Essaye avec un autre.</p>
+          {% endif %}
+        {% else %}
+          {% for quiz in quiz_list%}
+
+          <div class="p-2 border-black border-2 relative mb-10">
+              <h2 class="text-xl">{{quiz['title']}}</h2>
+              <p class="mb-5 break-words">{{quiz['description']}}</p>
+              <a href="{{quiz[0]}}" class="font-bold text-lg absolute right-0 bottom-0 bg-orange-300 p-1 border-black border-2 translate-y-4 translate-x-4">Y aller</a>
+          </div>
+
+          {% endfor %}
+        {% endif %}
+
+        <a class="p-2 bg-orange-300 w-max m-auto mt-10 text-xl border-2 border-transparent rounded-xl hover:bg-transparent hover:border-orange-300 duration-100 block" 
+        href="/create-quiz">Créer ton propre quiz</a>
+    </section>
+
+    <div class="flex">
+      {% if page %}
+        
+        {% if page > 0 %}
+        <a href="/quiz?page={{page - 1}}" class="hover:text-orange-600 p-2">Page précédente</a>
+        {% endif %}
+
+        {% if quiz_list %}
+        <a href="/quiz?page={{page + 1}}" class="ml-auto hover:text-orange-600 p-2">Page suivante</a>
+        {% endif %}
+
+      {% else %}
+
+      {% if quiz_list %}
+        <a href="/quiz?page=1" class="hover:text-orange-600 p-2 ml-auto">Page suivante</a>
+      {% endif %}
+
+      {% endif %}
+    </div>
+
+  </main>
+
+{% include 'footer.html' %}

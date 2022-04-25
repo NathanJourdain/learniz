@@ -1,0 +1,51 @@
+{% include 'header.html' %}
+
+<main class="max-w-5xl w-3/4 m-auto">
+
+    <h1
+        class="mt-10 text-4xl relative p-1 before:w-72 before:h-9 before:block before:bg-orange-300 before:absolute before:l-0 before:-z-20">
+        Les résultat du quiz : {{quiz_info['title']}}
+    </h1>
+    <p class="mb-10">
+        {{quiz_info['description']}}
+    </p>
+
+    <p class="text-xl mb-10">Tu as obtenu la note de <span class="text-orange-600 font-bold">{{score}} sur
+            {{nb_questions}}</span> !</p>
+
+    <section class="classement">
+        <h2 class="text-2xl">Voici le classement pour ce quiz</h2>
+        <ol class="list-decimal pl-10 border-l-4 border-orange-300">
+            {% for x in top_classement %}
+            <li class="text-xl">{{x[0]}} : {{x[1]}} / {{nb_questions}}</li>
+            {% endfor %}
+        </ol>
+    </section>
+
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+    const duration = 2 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 180, ticks: 60, zIndex: -1 };
+
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    let interval = setInterval(function () {
+        let timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        let particleCount = 600 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+    }, 250);
+</script>
+
+{% include 'footer.html' %}

@@ -1,0 +1,7 @@
+/database/
+requirements.txt
+runtime.txt
+Procfile
+wsgi.py
+start.sh
+tailwind.config.js
